@@ -1,13 +1,17 @@
 from fastapi import APIRouter, FastAPI, Depends, HTTPException, Request
 from fastapi.encoders import jsonable_encoder
 from fastapi.middleware.cors import CORSMiddleware
+from routers import user, task
+from database import engine, Base
 
-app = FastAPI(debug=True)
+Base.metadata.create_all(bind=engine)
+
+app = FastAPI(debug=True, title="Task Management API")
 router = APIRouter()
 
 # CORSの設定をより詳細に定義
 origins = [
-    "http://localhost:4989",
+    "http://localhost:3000",
 ]
 
 app.add_middleware(
@@ -20,9 +24,13 @@ app.add_middleware(
     max_age=600,  # Preflightリクエストのキャッシュ時間（秒）
 )
 
-@app.get("/check")
-def check_api():
-    return {"status": "ok"}
+# Include routers
+app.include_router(user.router, prefix="/api/users", tags=["users"])
+app.include_router(task.router, prefix="/api/tasks", tags=["tasks"])
+
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to Task Management API"}
 
 if __name__ == "__main__":
     import uvicorn
