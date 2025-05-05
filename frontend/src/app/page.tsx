@@ -38,6 +38,7 @@ export default function Home() {
                 colorScheme="blue" 
                 size="lg"
                 onClick={() => router.push('/login')}
+                width={120}
               >
                 Login
               </Button>
@@ -46,6 +47,7 @@ export default function Home() {
                 colorScheme="blue"
                 size="lg"
                 onClick={() => router.push('/register')}
+                width={120}
               >
                 Register
               </Button>
